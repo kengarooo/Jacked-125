@@ -1,5 +1,5 @@
 window.JACKED125_CONFIG = {
-  appName: "JACKED @ 125",
+  appName: "KENG's 6Pack",
   tagline: "Build muscle • Get lean • Reveal the abs",
 
   targets: {
