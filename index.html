@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Jacked 125" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Jacked @ 125</title>
+<script src="config.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <div class="eyebrow">BODYBUILDING DASHBOARD</div>
+      <h1>JACKED @ 125</h1>
+      <p>Build muscle • Get lean • Reveal the abs</p>
+    </div>
+    <button id="installBtn" class="ghost hidden">Install</button>
+  </header>
+
+  <main>
+    <section id="home" class="screen active">
+      <div class="hero card">
+        <div>
+          <span class="chip">Current phase</span>
+          <h2>Recomp → Cut</h2>
+          <p>High protein, progressive overload, gradual fat loss, and enough recovery to keep muscle.</p>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="card stat-card"><span>Weight</span><strong id="homeWeight">150.0 lb</strong><small id="weightDelta">Goal ~125 lb</small></div>
+        <div class="card stat-card"><span>Waist</span><strong id="homeWaist">—</strong><small>Track weekly</small></div>
+        <div class="card stat-card"><span>Calories</span><strong id="homeCalories">0 / 1750</strong><div class="meter"><i id="calMeter"></i></div></div>
+        <div class="card stat-card"><span>Protein</span><strong id="homeProtein">0 / 140g</strong><div class="meter"><i id="proteinMeter"></i></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Today</h2><button class="ghost" data-go="food">Log food</button></div>
+        <div id="todaySummary" class="summary-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>7-day trend</h2><button class="ghost" data-go="progress">Check in</button></div>
+        <div id="weeklyTrend" class="coach-copy"></div>
+      </div>
+
+      <div class="card">
+        <h2>6-Pack Mission</h2>
+        <p>Visible abs = developed abdominal muscle + enough body-fat reduction for them to show. We track weight, waist, ab training, and strength—not only the scale.</p>
+        <div class="mini-grid">
+          <div><span>Ab sets (7d)</span><strong id="abSets">0</strong></div>
+          <div><span>Training days (7d)</span><strong id="trainingDays">0</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="food" class="screen">
+      <div class="card">
+        <h2>Food log</h2>
+        <p class="muted">Enter label macros now. Codex can later connect a food API for barcode/search.</p>
+        <form id="foodForm">
+          <div class="form-grid two">
+            <label>Food<input id="foodName" required placeholder="Chicken breast" /></label>
+            <label>Amount<input id="foodAmount" placeholder="150 g" /></label>
+          </div>
+          <div class="form-grid four">
+            <label>Calories<input id="foodCalories" inputmode="decimal" type="number" min="0" step="1" /></label>
+            <label>Protein (g)<input id="foodProtein" inputmode="decimal" type="number" min="0" step="0.1" /></label>
+            <label>Carbs (g)<input id="foodCarbs" inputmode="decimal" type="number" min="0" step="0.1" /></label>
+            <label>Fat (g)<input id="foodFat" inputmode="decimal" type="number" min="0" step="0.1" /></label>
+          </div>
+          <button class="primary" type="submit">Add food</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Today's macros</h2>
+        <div id="macroSummary" class="macro-grid"></div>
+      </div>
+      <div class="card"><div class="card-head"><h2>Entries</h2><button id="clearTodayFood" class="danger ghost">Clear today</button></div><div id="foodList"></div></div>
+    </section>
+
+    <section id="train" class="screen">
+      <div class="card">
+        <h2>Training plan</h2>
+        <p class="muted">Built around your pair of 12s, pair of 8s, single 25-lb dumbbell, 8-lb kettlebell, and bench.</p>
+        <div id="program"></div>
+      </div>
+      <div class="card">
+        <h2>Log a set</h2>
+        <form id="setForm">
+          <label>Exercise<select id="exerciseSelect"></select></label>
+          <div class="form-grid four">
+            <label>Weight (lb)<input id="setWeight" type="number" inputmode="decimal" step="0.5" min="0" /></label>
+            <label>Reps<input id="setReps" type="number" inputmode="numeric" min="0" /></label>
+            <label>Sets<input id="setSets" type="number" inputmode="numeric" min="1" value="1" /></label>
+            <label>RIR<input id="setRir" type="number" inputmode="numeric" min="0" max="5" value="2" /></label>
+          </div>
+          <button class="primary" type="submit">Save set</button>
+        </form>
+      </div>
+      <div class="card"><h2>Recent training</h2><div id="setList"></div></div>
+    </section>
+
+    <section id="progress" class="screen">
+      <div class="card">
+        <h2>Weigh-in & measurements</h2>
+        <p class="notice">You can backdate and edit any entry. So when you get home and have a more accurate scale/measurements, choose the actual measurement date and update it.</p>
+        <form id="progressForm">
+          <input type="hidden" id="editProgressId" />
+          <div class="form-grid three">
+            <label>Date<input id="progressDate" required type="date" /></label>
+            <label>Weight (lb)<input id="progressWeight" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+            <label>Waist (in)<input id="progressWaist" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+          </div>
+          <div class="form-grid four">
+            <label>Hips (in)<input id="progressHips" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+            <label>Chest (in)<input id="progressChest" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+            <label>Arm (in)<input id="progressArm" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+            <label>Thigh (in)<input id="progressThigh" type="number" inputmode="decimal" step="0.1" min="0" /></label>
+          </div>
+          <div class="button-row"><button class="primary" type="submit">Save check-in</button><button id="cancelEdit" class="ghost hidden" type="button">Cancel edit</button></div>
+        </form>
+      </div>
+      <div class="card"><h2>Weight trend</h2><canvas id="weightChart" width="900" height="320" aria-label="Weight trend chart"></canvas></div>
+      <div class="card"><h2>History</h2><div id="progressList"></div></div>
+    </section>
+
+    <section id="coach" class="screen">
+      <div class="card"><h2>Coach snapshot</h2><div id="coachSnapshot" class="coach-copy"></div></div>
+      <div class="card">
+        <h2>Targets</h2>
+        <form id="targetForm">
+          <div class="form-grid three">
+            <label>Calories<input id="targetCalories" type="number" min="1000" step="10" /></label>
+            <label>Protein (g)<input id="targetProtein" type="number" min="40" step="1" /></label>
+            <label>Goal weight (lb)<input id="targetWeight" type="number" min="80" step="0.5" /></label>
+          </div>
+          <button class="primary" type="submit">Save targets</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Data & backup</h2>
+        <p class="muted">This build stores data on-device in Safari. Export backups before changing phones or clearing website data.</p>
+        <div class="button-row"><button id="exportBtn" class="ghost">Export JSON</button><label class="file-btn ghost">Import JSON<input id="importInput" type="file" accept="application/json" hidden /></label><button id="resetBtn" class="danger ghost">Reset app</button></div>
+      </div>
+      <div class="card">
+        <h2>Install on iPhone</h2>
+        <p>After you deploy it to an HTTPS URL, open it in Safari → Share → <b>Add to Home Screen</b>. Apple’s Home Screen web-app flow uses website metadata/manifest information to identify the app. </p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <button class="active" data-screen="home"><span>⌂</span>Home</button>
+    <button data-screen="food"><span>🥩</span>Food</button>
+    <button data-screen="train"><span>🏋️</span>Train</button>
+    <button data-screen="progress"><span>📏</span>Progress</button>
+    <button data-screen="coach"><span>◎</span>Coach</button>
+  </nav>
+  <script src="./app.js" defer></script>
+</body>
+</html>
