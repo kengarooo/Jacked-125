@@ -1,168 +1,460 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-  <meta name="theme-color" content="#0d1117" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Jacked 125" />
-  <link rel="manifest" href="./manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-  <link rel="stylesheet" href="./styles.css" />
-  <title>Keng's 6Pack</title>
-<script src="config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KENG’S PLAN — Bodybuilding Dashboard</title>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--muted:#9aa3b2;--text:#f5f7fa;--accent:#8be28b;--line:#2a2f39;--danger:#ff7272}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:28px 18px 18px;background:linear-gradient(145deg,#171c20,#0f1115);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:28px}h2{font-size:20px;margin:0 0 14px}h3{font-size:15px;margin:18px 0 8px}.sub{color:var(--muted);margin-top:5px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 14px;background:#12151a;position:sticky;top:92px;z-index:4;border-bottom:1px solid var(--line)}
+nav button{white-space:nowrap;background:#20252e;color:#cbd1da;border:0;border-radius:999px;padding:9px 13px}nav button.active{background:var(--accent);color:#101410;font-weight:700}
+main{max-width:1000px;margin:auto;padding:18px}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.stat{font-size:26px;font-weight:800}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.progress{height:10px;background:#292e37;border-radius:99px;overflow:hidden;margin:9px 0}.bar{height:100%;background:var(--accent);width:0}
+input,select,textarea{width:100%;background:#101319;border:1px solid #343a45;color:var(--text);border-radius:9px;padding:10px;margin-top:5px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:10px}
+button.primary{background:var(--accent);color:#101410;border:0;border-radius:9px;padding:11px 14px;font-weight:800;cursor:pointer}button.secondary{background:#252a33;color:white;border:1px solid #3a414d;border-radius:9px;padding:10px 13px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+.small{font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#252b34;color:#cbd1da;font-size:12px}
+.alert{padding:11px;border-radius:10px;background:#20251f;border:1px solid #334a34;color:#d9f2d9;margin-bottom:12px}
+canvas{width:100%;height:230px;background:#101319;border-radius:10px}
+.exercise{padding:12px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border-bottom:0}
+footer{color:var(--muted);text-align:center;padding:30px 10px;font-size:12px}
+.mealthumb{width:54px;height:54px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
+
+.fitness-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.fitness-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.day-tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{white-space:nowrap;background:#222832;color:#cbd1da;border:1px solid #343b47;border-radius:999px;padding:9px 12px;font-weight:700;cursor:pointer}
+.day-tab.active{background:var(--accent);color:#101410;border-color:var(--accent)}
+.workout-exercise-card{background:#11151b;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
+.workout-exercise-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.workout-exercise-name{font-weight:800;font-size:15px}
+.workout-prescription{font-size:12px;color:var(--muted);margin-top:3px}
+.workout-number{flex:0 0 30px;width:30px;height:30px;border-radius:999px;background:#252b34;display:flex;align-items:center;justify-content:center;font-weight:800;color:#dce2ea}
+.rest-card{background:#11151b;border:1px dashed #343b47;border-radius:12px;padding:16px;text-align:center;color:var(--muted)}
+.fitness-tip{margin-top:10px;padding:10px;border-radius:10px;background:#20251f;border:1px solid #334a34;color:#d9f2d9;font-size:12px}
+
+
+.water-ring-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.water-ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) 0deg,#2b313a 0deg);position:relative}
+.water-ring:after{content:"";position:absolute;width:86px;height:86px;border-radius:50%;background:var(--card)}
+.water-ring-center{position:relative;z-index:1;text-align:center}.water-ring-center b{display:block;font-size:22px}
+.water-actions{display:grid;grid-template-columns:repeat(2,minmax(110px,1fr));gap:8px;flex:1;min-width:230px}
+.walk-card{background:#11151b;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+.walk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+</style>
 </head>
 <body>
-  <header class="app-header">
-    <div>
-      <div class="eyebrow">BODYBUILDING DASHBOARD</div>
-      <h1>JACKED @ 125</h1>
-      <p>Build muscle • Get lean • Reveal the abs</p>
+<header>
+  <h1>KENG’S PLAN</h1>
+  <div class="sub">Build muscle • Get lean • Reveal the abs</div>
+</header>
+<nav id="nav">
+  <button class="active" data-tab="dashboard">Dashboard</button>
+  <button data-tab="nutrition">Nutrition</button>
+  <button data-tab="workouts">Fitness</button>
+  <button data-tab="progress">Progress</button>
+  <button data-tab="coach">Coach</button>
+  <button data-tab="settings">Settings</button>
+</nav>
+<main>
+
+<section id="dashboard" class="tab active">
+  <div class="alert"><b>Current phase:</b> Recomp / fat-loss while building muscle. Starting targets: 1,750 kcal and 140g protein. Adjustments should be based on several weeks of trends, not one weigh-in.</div>
+  <div class="grid">
+    <div class="card"><div class="label">Current weight</div><div class="stat" id="dashWeight">150 lb</div><div class="small">Goal: ~125 lb</div></div>
+    <div class="card"><div class="label">Waist</div><div class="stat" id="dashWaist">—</div><div class="small">Track weekly</div></div>
+    <div class="card"><div class="label">Calories</div><div class="stat" id="calStat">0 / 1750</div><div class="progress"><div class="bar" id="calBar"></div></div></div>
+    <div class="card"><div class="label">Protein</div><div class="stat" id="protStat">0 / 140g</div><div class="progress"><div class="bar" id="protBar"></div></div></div>
+  </div>
+  <div class="card"><h2>Today</h2><div id="todaySummary" class="small">Log food and a workout to start your day.</div></div>
+  
+<div class="card">
+  <div class="fitness-section-title"><div><div class="label">HYDRATION</div><h2 style="margin-bottom:4px">1-Gallon Water Goal</h2></div><span class="pill">128 oz</span></div>
+  <div class="water-ring-wrap">
+    <div class="water-ring" id="waterRing"><div class="water-ring-center"><b id="waterOz">0 oz</b><span class="small" id="waterPct">0%</span></div></div>
+    <div class="water-actions">
+      <button class="secondary" onclick="addWater(8)">+ 8 oz</button>
+      <button class="secondary" onclick="addWater(16)">+ 16 oz</button>
+      <button class="secondary" onclick="addWater(24)">+ 24 oz</button>
+      <button class="primary" onclick="addWater(32)">+ 32 oz</button>
     </div>
-    <button id="installBtn" class="ghost hidden">Install</button>
-  </header>
+  </div>
+  <div class="row" style="margin-top:12px">
+    <label>Custom ounces<input id="customWater" type="number" min="1" placeholder="e.g. 20"></label>
+    <div style="align-self:end"><button class="secondary" onclick="addCustomWater()">Add custom</button></div>
+    <div style="align-self:end"><button class="secondary" onclick="resetWater()">Reset today</button></div>
+  </div>
+  <p class="small" id="waterMessage">Goal: 128 oz / 1 gallon per day.</p>
+</div>
+<div class="card"><h2>6-Pack Mission</h2><p class="small">Visible abs depend on abdominal muscle development plus getting lean enough for them to show. The app tracks waist, weight trend, ab training and nutrition—not just the scale.</p>
+  <div class="grid"><div><span class="label">Ab sessions this week</span><div class="stat" id="abWeek">0</div></div><div><span class="label">Workout sessions</span><div class="stat" id="wkWeek">0</div></div></div></div>
+</section>
 
-  <main>
-    <section id="home" class="screen active">
-      <div class="hero card">
-        <div>
-          <span class="chip">Current phase</span>
-          <h2>Recomp → Cut</h2>
-          <p>High protein, progressive overload, gradual fat loss, and enough recovery to keep muscle.</p>
+<section id="nutrition" class="tab">
+  <div class="card"><h2>Log Food</h2>
+    <div class="row">
+      <label>Food<input id="foodName" placeholder="e.g. chicken breast"></label>
+      <label>Serving / amount<input id="foodAmt" placeholder="e.g. 150g"></label>
+    </div>
+    <div class="row">
+      <label>Calories<input id="foodCal" type="number" min="0"></label>
+      <label>Protein (g)<input id="foodPro" type="number" min="0" step=".1"></label>
+      <label>Carbs (g)<input id="foodCarb" type="number" min="0" step=".1"></label>
+      <label>Fat (g)<input id="foodFat" type="number" min="0" step=".1"></label>
+    </div>
+    <button class="primary" onclick="addFood()">Add food</button>
+  </div>
+  
+  <div class="card"><h2>📸 Photo Meal</h2>
+    <p class="small">Take a food picture on your iPhone, save it with the meal, then enter the macro estimate. You can send the same photo to ChatGPT for an estimate and copy the numbers back here. A future cloud version can automate the analysis.</p>
+    <label>Take / choose meal photo
+      <input id="mealPhoto" type="file" accept="image/*" capture="environment" onchange="previewMealPhoto(event)">
+    </label>
+    <div id="mealPhotoPreviewWrap" style="display:none;margin:10px 0">
+      <img id="mealPhotoPreview" alt="Meal preview" style="width:100%;max-height:320px;object-fit:cover;border-radius:12px;border:1px solid #343a45">
+    </div>
+    <div class="row">
+      <label>Meal name<input id="photoMealName" placeholder="e.g. chicken rice bowl"></label>
+      <label>Calories<input id="photoCal" type="number" min="0"></label>
+      <label>Protein (g)<input id="photoPro" type="number" min="0" step=".1"></label>
+      <label>Carbs (g)<input id="photoCarb" type="number" min="0" step=".1"></label>
+      <label>Fat (g)<input id="photoFat" type="number" min="0" step=".1"></label>
+    </div>
+    <div class="row">
+      <button class="secondary" onclick="copyPhotoPrompt()">Copy prompt for ChatGPT</button>
+      <button class="primary" onclick="savePhotoMeal()">Save photo meal</button>
+    </div>
+    <p id="photoHint" class="small"></p>
+  </div>
+
+<div class="card"><h2>Today's Macros</h2><div class="grid">
+    <div><span class="label">Calories</span><div class="stat" id="nCal">0</div></div>
+    <div><span class="label">Protein</span><div class="stat" id="nPro">0g</div></div>
+    <div><span class="label">Carbs</span><div class="stat" id="nCarb">0g</div></div>
+    <div><span class="label">Fat</span><div class="stat" id="nFat">0g</div></div>
+  </div></div>
+  <div class="card"><h2>Food Log</h2><div id="foodTable"></div></div>
+</section>
+
+
+<section id="workouts" class="tab">
+  <div class="card">
+    <div class="fitness-hero">
+      <div>
+        <div class="label">FITNESS</div>
+        <h2 style="margin-bottom:6px">Your Training Plan</h2>
+        <p class="small" style="margin:0">4 lifting days + 3 short ab sessions. Focus on progressive overload, good form, and getting close to failure.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="fitness-section-title">
+      <div>
+        <div class="label">TODAY</div>
+        <h2 style="margin-bottom:4px" id="todayWorkoutTitle">Today’s Workout</h2>
+      </div>
+      <span class="pill" id="todayWorkoutTag">Plan</span>
+    </div>
+    <div id="todayWorkout"></div>
+  </div>
+
+  <div class="card">
+    <div class="fitness-section-title">
+      <div>
+        <div class="label">WEEKLY SPLIT</div>
+        <h2 style="margin-bottom:4px">Choose a Workout Day</h2>
+      </div>
+    </div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div id="selectedDayWorkout"></div>
+  </div>
+
+  
+<div class="card" id="recoveryCard">
+  <div class="fitness-section-title"><div><div class="label">RECOVERY DAY</div><h2 style="margin-bottom:4px">Brisk Walk</h2></div><span class="pill">Optional cardio</span></div>
+  <p class="small">Use this on non-lifting days. Keep the pace brisk but comfortable enough that it doesn’t interfere with recovery.</p>
+  <div class="walk-card">
+    <div class="walk-grid">
+      <label>Minutes<input id="walkMinutes" type="number" min="1" value="30"></label>
+      <label>Distance (mi)<input id="walkDistance" type="number" min="0" step=".1" placeholder="optional"></label>
+      <label>Effort (1–10)<input id="walkEffort" type="number" min="1" max="10" value="5"></label>
+    </div>
+    <button class="primary" onclick="logBriskWalk()">Log brisk walk</button>
+  </div>
+</div>
+<div class="card">
+    <div class="fitness-section-title">
+      <div>
+        <div class="label">TRAINING LOG</div>
+        <h2 style="margin-bottom:4px">Log a Set</h2>
+      </div>
+    </div>
+    <p class="small">RIR = reps you could still do with good form. Most sets should finish around RIR 1–3.</p>
+    <div class="row">
+      <label>Exercise<select id="exSelect"></select></label>
+      <label>Weight (lb)<input id="exWeight" type="number" step=".5"></label>
+      <label>Reps<input id="exReps" type="number"></label>
+      <label>Sets<input id="exSets" type="number" value="1"></label>
+      <label>RIR<input id="exRir" type="number" min="0" max="5" value="2"></label>
+    </div>
+    <button class="primary" onclick="addWorkout()">Save set</button>
+  </div>
+
+  <div class="card">
+    <div class="fitness-section-title">
+      <div>
+        <div class="label">HISTORY</div>
+        <h2 style="margin-bottom:4px">Recent Training</h2>
+      </div>
+    </div>
+    <div id="workoutTable"></div>
+  </div>
+</section>
+
+<section id="progress" class="tab">
+  <div class="card"><h2>Daily / Weekly Check-in</h2>
+    <div class="row">
+      <label>Date<input id="pDate" type="date"></label><label>Weight (lb)<input id="pWeight" type="number" step=".1"></label><label>Waist (in)<input id="pWaist" type="number" step=".1"></label>
+    </div>
+    <div class="row">
+      <label>Hips (in)<input id="pHips" type="number" step=".1"></label><label>Chest (in)<input id="pChest" type="number" step=".1"></label><label>Arm (in)<input id="pArm" type="number" step=".1"></label><label>Thigh (in)<input id="pThigh" type="number" step=".1"></label>
+    </div>
+    <button class="primary" onclick="addProgress()">Save check-in</button>
+  </div>
+  <div class="card"><h2>Weight Trend</h2><canvas id="weightChart" width="900" height="230"></canvas></div>
+  <div class="card"><h2>Measurements</h2><div id="progressTable"></div></div>
+</section>
+
+<section id="coach" class="tab">
+  <div class="card"><h2>Coach Snapshot</h2><div id="coachText"></div></div>
+  <div class="card"><h2>How we adjust</h2>
+    <ul class="small"><li>Protein stays high to support muscle retention/growth.</li><li>We use weekly averages and waist trends, not single-day scale changes.</li><li>If weight/waist stall for several weeks, calories may be adjusted modestly.</li><li>If performance, recovery or hunger deteriorate, calories may need to come up.</li><li>The goal is a lean, muscular physique—not simply the lowest scale number.</li></ul>
+  </div>
+</section>
+
+<section id="settings" class="tab">
+  <div class="card"><h2>Your Targets</h2>
+    <div class="row"><label>Calorie target<input id="setCal" type="number"></label><label>Protein target (g)<input id="setPro" type="number"></label><label>Goal weight (lb)<input id="setGoal" type="number"></label></div>
+    <button class="primary" onclick="saveSettings()">Save targets</button>
+  </div>
+  <div class="card"><h2>Data</h2><p class="small">Your entries are stored locally in this browser. Use Export to back up your data.</p><button class="secondary" onclick="exportData()">Export JSON</button> <button class="secondary" onclick="clearData()">Clear all data</button></div>
+</section>
+
+</main>
+<footer>KENG’S PLAN • Personal training & nutrition tracker • Local-only prototype</footer>
+
+<script>
+const defaults={cal:1750,pro:140,goal:125,foods:[],workouts:[],progress:[],water:{}};
+let db=JSON.parse(localStorage.getItem("jacked125")||"null")||defaults;
+db={...defaults,...db};
+const program={
+"MONDAY — GLUTES + QUADS":[["Bulgarian split squat","4 × 8–15/leg"],["Goblet squat","4 × 12–20"],["DB Romanian deadlift","4 × 10–15"],["DB hip thrust","4 × 12–20"],["Reverse lunge","3 × 10–15/leg"],["Calf raise","4 × 15–30"]],
+"TUESDAY — UPPER BODY":[["One-arm DB row","4 × 10–20/side"],["DB shoulder press","4 × 8–15"],["Bench-supported row","3 × 12–20/side"],["Lateral raise","4 × 12–25"],["DB chest press","3 × 10–20"],["DB biceps curl","3 × 10–20"],["Overhead triceps extension","3 × 12–20"]],
+"THURSDAY — GLUTES + HAMSTRINGS":[["Bulgarian split squat","3 × 10–15/leg"],["Single-leg Romanian deadlift","4 × 10–15/leg"],["DB hip thrust","4 × 15–25"],["DB sumo squat","4 × 12–20"],["DB bench step-up","3 × 8–15/leg"],["Glute bridge burnout","2 × 25–40"]],
+"FRIDAY — SHOULDERS + BACK + ARMS":[["One-arm DB row","4 × 12–20"],["DB shoulder press","3 × 10–15"],["Lateral raise","4 × 15–30"],["Rear-delt fly","4 × 15–25"],["DB chest press","3 × 12–20"],["Hammer curl","3 × 12–20"],["Triceps extension","3 × 12–20"],["Push-ups","2 × near failure"]],
+"ABS — 3X/WEEK":[["Weighted crunch","3 × 10–15"],["Reverse crunch","3 × 12–20"],["Plank","3 × 30–60 sec"],["Bench reverse crunch","3 × 12–20"],["Dead bug","3 × 10–15/side"],["Side plank","3 × 30–45 sec/side"],["Weighted sit-up","3 × 10–15"],["Leg raise/reverse crunch","3 × 10–20"]]
+};
+const allExercises=[...new Set(Object.values(program).flat().map(x=>x[0]))];
+
+function save(){localStorage.setItem("jacked125",JSON.stringify(db))}
+function today(){return new Date().toISOString().slice(0,10)}
+function todayFoods(){return db.foods.filter(x=>x.date===today())}
+function totals(){return todayFoods().reduce((a,x)=>{a.cal+=+x.cal||0;a.pro+=+x.pro||0;a.carb+=+x.carb||0;a.fat+=+x.fat||0;return a},{cal:0,pro:0,carb:0,fat:0})}
+function render(){
+ document.getElementById("setCal").value=db.cal;document.getElementById("setPro").value=db.pro;document.getElementById("setGoal").value=db.goal;
+ const t=totals(); document.getElementById("nCal").textContent=Math.round(t.cal);document.getElementById("nPro").textContent=Math.round(t.pro)+"g";document.getElementById("nCarb").textContent=Math.round(t.carb)+"g";document.getElementById("nFat").textContent=Math.round(t.fat)+"g";
+ document.getElementById("calStat").textContent=Math.round(t.cal)+" / "+db.cal;document.getElementById("protStat").textContent=Math.round(t.pro)+" / "+db.pro+"g";
+ document.getElementById("calBar").style.width=Math.min(100,t.cal/db.cal*100)+"%";document.getElementById("protBar").style.width=Math.min(100,t.pro/db.pro*100)+"%";
+ let latest=db.progress[db.progress.length-1];document.getElementById("dashWeight").textContent=(latest?.weight||150)+" lb";document.getElementById("dashWaist").textContent=latest?.waist?latest.waist+'"' :"—";
+ document.getElementById("todaySummary").textContent=`${todayFoods().length} foods logged • ${Math.round(t.pro)}g protein • ${Math.round(t.cal)} calories`;
+ const wk=new Date();wk.setDate(wk.getDate()-6);const cutoff=wk.toISOString().slice(0,10);
+ const ww=db.workouts.filter(x=>x.date>=cutoff);document.getElementById("wkWeek").textContent=new Set(ww.map(x=>x.date)).size;
+ document.getElementById("abWeek").textContent=ww.filter(x=>x.exercise.toLowerCase().includes("crunch")||x.exercise.toLowerCase().includes("plank")||x.exercise.toLowerCase().includes("dead bug")||x.exercise.toLowerCase().includes("sit-up")||x.exercise.toLowerCase().includes("leg raise")).length;
+ renderFoods();renderWorkouts();renderProgress();renderProgram();renderCoach();renderWater();
+}
+function addFood(){let n=document.getElementById("foodName").value;if(!n)return;db.foods.push({date:today(),name:n,amt:document.getElementById("foodAmt").value,cal:+document.getElementById("foodCal").value||0,pro:+document.getElementById("foodPro").value||0,carb:+document.getElementById("foodCarb").value||0,fat:+document.getElementById("foodFat").value||0});save();["foodName","foodAmt","foodCal","foodPro","foodCarb","foodFat"].forEach(id=>document.getElementById(id).value="");render()}
+function renderFoods(){let a=todayFoods();document.getElementById("foodTable").innerHTML=a.length?`<table><tr><th>Food</th><th>Amount</th><th>Cal</th><th>Protein</th><th></th></tr>${a.map((x,i)=>`<tr><td>${x.photo?`<img class="mealthumb" src="${x.photo}" alt="meal"><br>`:""}${x.name}</td><td>${x.amt||""}</td><td>${x.cal}</td><td>${x.pro}g</td><td><button class="secondary" onclick="delFood(${db.foods.indexOf(x)})">×</button></td></tr>`).join("")}</table>`:"<span class='small'>Nothing logged yet.</span>"}
+function delFood(i){db.foods.splice(i,1);save();render()}
+function addWorkout(){let e=document.getElementById("exSelect").value;if(!e)return;db.workouts.push({date:today(),exercise:e,weight:+document.getElementById("exWeight").value||0,reps:+document.getElementById("exReps").value||0,sets:+document.getElementById("exSets").value||1,rir:+document.getElementById("exRir").value||0});save();render()}
+function renderWorkouts(){
+ let a=db.workouts.slice(-25).reverse();
+ document.getElementById("workoutTable").innerHTML=a.length?`<table><tr><th>Date</th><th>Workout</th><th>Details</th><th>Effort</th></tr>${a.map(x=>{
+ if(x.type==="cardio"||x.exercise==="Brisk walk") return `<tr><td>${x.date}</td><td>${x.exercise}</td><td>${x.minutes||x.reps||0} min${x.distance?` • ${x.distance} mi`:""}</td><td>${x.effort?x.effort+"/10":"—"}</td></tr>`;
+ return `<tr><td>${x.date}</td><td>${x.exercise}</td><td>${x.weight} lb • ${x.reps} reps × ${x.sets}</td><td>${x.rir===null||x.rir===undefined?"—":"RIR "+x.rir}</td></tr>`;
+ }).join("")}</table>`:"<span class='small'>No workouts logged yet.</span>";
+}</td><td>${x.exercise}</td><td>${x.weight} lb</td><td>${x.reps}</td><td>${x.sets}</td><td>${x.rir}</td></tr>`).join("")}</table>`:"<span class='small'>No workouts logged yet.</span>"}
+
+let selectedWorkoutDay = "MONDAY — GLUTES + QUADS";
+
+function friendlyDayName(key){
+  if(key.startsWith("MONDAY")) return "Mon • Glutes + Quads";
+  if(key.startsWith("TUESDAY")) return "Tue • Upper";
+  if(key.startsWith("THURSDAY")) return "Thu • Glutes + Hams";
+  if(key.startsWith("FRIDAY")) return "Fri • Shoulders + Back + Arms";
+  if(key.startsWith("ABS")) return "Abs";
+  return key;
+}
+
+function workoutForToday(){
+  const day = new Date().getDay(); // 0 sun
+  if(day===1) return "MONDAY — GLUTES + QUADS";
+  if(day===2) return "TUESDAY — UPPER BODY";
+  if(day===4) return "THURSDAY — GLUTES + HAMSTRINGS";
+  if(day===5) return "FRIDAY — SHOULDERS + BACK + ARMS";
+  return null;
+}
+
+function renderExerciseCards(arr){
+  if(!arr || !arr.length) return '<div class="rest-card">No exercises scheduled.</div>';
+  return arr.map((x,i)=>`
+    <div class="workout-exercise-card">
+      <div class="workout-exercise-top">
+        <div style="display:flex;gap:10px">
+          <div class="workout-number">${i+1}</div>
+          <div>
+            <div class="workout-exercise-name">${x[0]}</div>
+            <div class="workout-prescription">${x[1]}</div>
+          </div>
         </div>
       </div>
+    </div>`).join("");
+}
 
-      <div class="stat-grid">
-        <div class="card stat-card"><span>Weight</span><strong id="homeWeight">150.0 lb</strong><small id="weightDelta">Goal ~125 lb</small></div>
-        <div class="card stat-card"><span>Waist</span><strong id="homeWaist">—</strong><small>Track weekly</small></div>
-        <div class="card stat-card"><span>Calories</span><strong id="homeCalories">0 / 1750</strong><div class="meter"><i id="calMeter"></i></div></div>
-        <div class="card stat-card"><span>Protein</span><strong id="homeProtein">0 / 140g</strong><div class="meter"><i id="proteinMeter"></i></div></div>
-      </div>
+function chooseWorkoutDay(day){
+  selectedWorkoutDay = day;
+  renderProgram();
+}
 
-      <div class="card">
-        <div class="card-head"><h2>Today</h2><button class="ghost" data-go="food">Log food</button></div>
-        <div id="todaySummary" class="summary-grid"></div>
-      </div>
+function renderProgram(){
+  const trainingKeys = Object.keys(program);
+  const all = [...new Set(Object.values(program).flat().map(x=>x[0]))];
+  document.getElementById("exSelect").innerHTML = all.map(x=>`<option>${x}</option>`).join("");
 
-      <div class="card">
-        <div class="card-head"><h2>7-day trend</h2><button class="ghost" data-go="progress">Check in</button></div>
-        <div id="weeklyTrend" class="coach-copy"></div>
-      </div>
+  // Weekly split tabs
+  document.getElementById("dayTabs").innerHTML = trainingKeys.map(key=>`
+    <button class="day-tab ${key===selectedWorkoutDay?'active':''}" onclick='chooseWorkoutDay(${JSON.stringify(key)})'>
+      ${friendlyDayName(key)}
+    </button>`).join("");
 
-      <div class="card">
-        <h2>6-Pack Mission</h2>
-        <p>Visible abs = developed abdominal muscle + enough body-fat reduction for them to show. We track weight, waist, ab training, and strength—not only the scale.</p>
-        <div class="mini-grid">
-          <div><span>Ab sets (7d)</span><strong id="abSets">0</strong></div>
-          <div><span>Training days (7d)</span><strong id="trainingDays">0</strong></div>
-        </div>
-      </div>
-    </section>
+  // Selected day
+  const selected = program[selectedWorkoutDay] || [];
+  document.getElementById("selectedDayWorkout").innerHTML =
+    `<div class="fitness-tip"><b>${friendlyDayName(selectedWorkoutDay)}</b> • Move with control. When you hit the top of the rep range with ~1–2 RIR, make the movement harder next time.</div>` +
+    `<div style="margin-top:12px">${renderExerciseCards(selected)}</div>`;
 
-    <section id="food" class="screen">
-      <div class="card">
-        <h2>Food log</h2>
-        <p class="muted">Enter label macros now. Codex can later connect a food API for barcode/search.</p>
-        <form id="foodForm">
-          <div class="form-grid two">
-            <label>Food<input id="foodName" required placeholder="Chicken breast" /></label>
-            <label>Amount<input id="foodAmount" placeholder="150 g" /></label>
-          </div>
-          <div class="form-grid four">
-            <label>Calories<input id="foodCalories" inputmode="decimal" type="number" min="0" step="1" /></label>
-            <label>Protein (g)<input id="foodProtein" inputmode="decimal" type="number" min="0" step="0.1" /></label>
-            <label>Carbs (g)<input id="foodCarbs" inputmode="decimal" type="number" min="0" step="0.1" /></label>
-            <label>Fat (g)<input id="foodFat" inputmode="decimal" type="number" min="0" step="0.1" /></label>
-          </div>
-          <button class="primary" type="submit">Add food</button>
-        </form>
-      </div>
-      <div class="card">
-        <h2>Today's macros</h2>
-        <div id="macroSummary" class="macro-grid"></div>
-      </div>
-      <div class="card"><div class="card-head"><h2>Entries</h2><button id="clearTodayFood" class="danger ghost">Clear today</button></div><div id="foodList"></div></div>
-    </section>
+  // Today's workout
+  const todayKey = workoutForToday();
+  const title = document.getElementById("todayWorkoutTitle");
+  const tag = document.getElementById("todayWorkoutTag");
+  const todayBox = document.getElementById("todayWorkout");
 
-    <section id="train" class="screen">
-      <div class="card">
-        <h2>Training plan</h2>
-        <p class="muted">Built around your pair of 12s, pair of 8s, single 25-lb dumbbell, 8-lb kettlebell, and bench.</p>
-        <div id="program"></div>
+  if(todayKey){
+    title.textContent = friendlyDayName(todayKey);
+    tag.textContent = "Lift day";
+    todayBox.innerHTML = renderExerciseCards(program[todayKey]);
+  }else{
+    title.textContent = "Recovery / Abs / Brisk Walk";
+    tag.textContent = "Recovery";
+    todayBox.innerHTML = `
+      <div class="rest-card">
+        <b>No main lifting session scheduled today.</b><br><br>
+        Walk, recover, and do an ab session if it fits your week.
       </div>
-      <div class="card">
-        <h2>Log a set</h2>
-        <form id="setForm">
-          <label>Exercise<select id="exerciseSelect"></select></label>
-          <div class="form-grid four">
-            <label>Weight (lb)<input id="setWeight" type="number" inputmode="decimal" step="0.5" min="0" /></label>
-            <label>Reps<input id="setReps" type="number" inputmode="numeric" min="0" /></label>
-            <label>Sets<input id="setSets" type="number" inputmode="numeric" min="1" value="1" /></label>
-            <label>RIR<input id="setRir" type="number" inputmode="numeric" min="0" max="5" value="2" /></label>
-          </div>
-          <button class="primary" type="submit">Save set</button>
-        </form>
-      </div>
-      <div class="card"><h2>Recent training</h2><div id="setList"></div></div>
-    </section>
+      <div style="margin-top:12px">${renderExerciseCards(program["ABS — 3X/WEEK"])}</div>`;
+  }
+}</h3>${arr.map(x=>`<div class="exercise"><b>${x[0]}</b><br><span class="small">${x[1]}</span></div>`).join("")}`).join("");document.getElementById("exSelect").innerHTML=allExercises.map(x=>`<option>${x}</option>`).join("")}
+function addProgress(){let d=document.getElementById("pDate").value||today();db.progress.push({date:d,weight:+document.getElementById("pWeight").value||null,waist:+document.getElementById("pWaist").value||null,hips:+document.getElementById("pHips").value||null,chest:+document.getElementById("pChest").value||null,arm:+document.getElementById("pArm").value||null,thigh:+document.getElementById("pThigh").value||null});db.progress.sort((a,b)=>a.date.localeCompare(b.date));save();render()}
+function renderProgress(){let a=db.progress.slice().reverse();document.getElementById("progressTable").innerHTML=a.length?`<table><tr><th>Date</th><th>Weight</th><th>Waist</th><th>Hips</th><th>Chest</th><th>Arm</th><th>Thigh</th></tr>${a.map(x=>`<tr><td>${x.date}</td><td>${x.weight||"—"}</td><td>${x.waist||"—"}</td><td>${x.hips||"—"}</td><td>${x.chest||"—"}</td><td>${x.arm||"—"}</td><td>${x.thigh||"—"}</td></tr>`).join("")}</table>`:"<span class='small'>No check-ins yet.</span>";drawChart()}
+function drawChart(){let c=document.getElementById("weightChart"),ctx=c.getContext("2d"),a=db.progress.filter(x=>x.weight);ctx.clearRect(0,0,c.width,c.height);if(!a.length){ctx.fillStyle="#9aa3b2";ctx.fillText("Add weigh-ins to see your trend.",20,35);return}let min=Math.min(...a.map(x=>x.weight),db.goal)-2,max=Math.max(...a.map(x=>x.weight))+2;ctx.strokeStyle="#8be28b";ctx.lineWidth=3;ctx.beginPath();a.forEach((x,i)=>{let px=30+i*(c.width-60)/Math.max(1,a.length-1),py=c.height-25-(x.weight-min)/(max-min)*(c.height-50);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.fillStyle="#f5f7fa";a.forEach((x,i)=>{let px=30+i*(c.width-60)/Math.max(1,a.length-1),py=c.height-25-(x.weight-min)/(max-min)*(c.height-50);ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.fillText(x.weight,px-10,py-9)})}
+function renderCoach(){let a=db.progress.filter(x=>x.weight), latest=a.at(-1), prev=a.length>1?a.at(-2):null;let text=`<p><b>Current focus:</b> build/retain muscle while gradually reducing body fat.</p>`;if(latest){text+=`<p>Latest check-in: <b>${latest.weight} lb</b>${latest.waist?`, waist <b>${latest.waist}"</b>`:""}.</p>`}if(latest&&prev){let diff=(latest.weight-prev.weight).toFixed(1);text+=`<p>Change from previous logged check-in: <b>${diff>0?"+":""}${diff} lb</b>. We need multiple data points before changing calories.</p>`}text+=`<p>Targets: <b>${db.cal} kcal</b> and <b>${db.pro}g protein</b>. Goal weight: <b>~${db.goal} lb</b>. Six-pack goal: track waist + ab strength + photos, not scale weight alone.</p>`;document.getElementById("coachText").innerHTML=text}
 
-    <section id="progress" class="screen">
-      <div class="card">
-        <h2>Weigh-in & measurements</h2>
-        <p class="notice">You can backdate and edit any entry. So when you get home and have a more accurate scale/measurements, choose the actual measurement date and update it.</p>
-        <form id="progressForm">
-          <input type="hidden" id="editProgressId" />
-          <div class="form-grid three">
-            <label>Date<input id="progressDate" required type="date" /></label>
-            <label>Weight (lb)<input id="progressWeight" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-            <label>Waist (in)<input id="progressWaist" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-          </div>
-          <div class="form-grid four">
-            <label>Hips (in)<input id="progressHips" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-            <label>Chest (in)<input id="progressChest" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-            <label>Arm (in)<input id="progressArm" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-            <label>Thigh (in)<input id="progressThigh" type="number" inputmode="decimal" step="0.1" min="0" /></label>
-          </div>
-          <div class="button-row"><button class="primary" type="submit">Save check-in</button><button id="cancelEdit" class="ghost hidden" type="button">Cancel edit</button></div>
-        </form>
-      </div>
-      <div class="card"><h2>Weight trend</h2><canvas id="weightChart" width="900" height="320" aria-label="Weight trend chart"></canvas></div>
-      <div class="card"><h2>History</h2><div id="progressList"></div></div>
-    </section>
+let currentMealPhoto = "";
 
-    <section id="coach" class="screen">
-      <div class="card"><h2>Coach snapshot</h2><div id="coachSnapshot" class="coach-copy"></div></div>
-      <div class="card">
-        <h2>Targets</h2>
-        <form id="targetForm">
-          <div class="form-grid three">
-            <label>Calories<input id="targetCalories" type="number" min="1000" step="10" /></label>
-            <label>Protein (g)<input id="targetProtein" type="number" min="40" step="1" /></label>
-            <label>Goal weight (lb)<input id="targetWeight" type="number" min="80" step="0.5" /></label>
-          </div>
-          <button class="primary" type="submit">Save targets</button>
-        </form>
-      </div>
-      <div class="card">
-        <h2>Data & backup</h2>
-        <p class="muted">This build stores data on-device in Safari. Export backups before changing phones or clearing website data.</p>
-        <div class="button-row"><button id="exportBtn" class="ghost">Export JSON</button><label class="file-btn ghost">Import JSON<input id="importInput" type="file" accept="application/json" hidden /></label><button id="resetBtn" class="danger ghost">Reset app</button></div>
-      </div>
-      <div class="card">
-        <h2>Install on iPhone</h2>
-        <p>After you deploy it to an HTTPS URL, open it in Safari → Share → <b>Add to Home Screen</b>. Apple’s Home Screen web-app flow uses website metadata/manifest information to identify the app. </p>
-      </div>
-    </section>
-  </main>
+function previewMealPhoto(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentMealPhoto = e.target.result;
+    document.getElementById("mealPhotoPreview").src = currentMealPhoto;
+    document.getElementById("mealPhotoPreviewWrap").style.display = "block";
+    document.getElementById("photoHint").textContent =
+      "Photo attached. Send this same photo to ChatGPT for an estimate of calories, protein, carbs, and fat.";
+  };
+  reader.readAsDataURL(file);
+}
 
-  <nav class="bottom-nav" aria-label="Primary">
-    <button class="active" data-screen="home"><span>⌂</span>Home</button>
-    <button data-screen="food"><span>🥩</span>Food</button>
-    <button data-screen="train"><span>🏋️</span>Train</button>
-    <button data-screen="progress"><span>📏</span>Progress</button>
-    <button data-screen="coach"><span>◎</span>Coach</button>
-  </nav>
-  <script src="./app.js" defer></script>
+function copyPhotoPrompt(){
+  const text = "Estimate the calories, protein, carbs, and fat in this meal from the photo. Give me one best estimate plus a reasonable range. I am tracking macros for a bodybuilding cut.";
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>{
+      document.getElementById("photoHint").textContent =
+        "Prompt copied. Send the meal photo to ChatGPT, paste the prompt, then enter the estimate here.";
+    }).catch(()=>{
+      document.getElementById("photoHint").textContent = text;
+    });
+  } else {
+    document.getElementById("photoHint").textContent = text;
+  }
+}
+
+function savePhotoMeal(){
+  const item = {
+    date: today(),
+    name: document.getElementById("photoMealName").value || "Photo meal",
+    amt: "photo",
+    cal: +document.getElementById("photoCal").value || 0,
+    pro: +document.getElementById("photoPro").value || 0,
+    carb: +document.getElementById("photoCarb").value || 0,
+    fat: +document.getElementById("photoFat").value || 0,
+    photo: currentMealPhoto
+  };
+  db.foods.push(item);
+  save();
+  ["photoMealName","photoCal","photoPro","photoCarb","photoFat"].forEach(id=>{
+    document.getElementById(id).value="";
+  });
+  document.getElementById("mealPhoto").value="";
+  document.getElementById("mealPhotoPreviewWrap").style.display="none";
+  currentMealPhoto="";
+  document.getElementById("photoHint").textContent="Saved.";
+  render();
+}
+
+
+function waterToday(){ if(!db.water) db.water={}; return +db.water[today()]||0; }
+function setWaterToday(oz){ if(!db.water) db.water={}; db.water[today()]=Math.max(0,Math.round(oz)); save(); renderWater(); }
+function addWater(oz){ setWaterToday(waterToday()+(+oz||0)); }
+function addCustomWater(){ const el=document.getElementById("customWater"); const oz=+el.value||0; if(oz>0){addWater(oz); el.value="";} }
+function resetWater(){ setWaterToday(0); }
+function renderWater(){
+  const ring=document.getElementById("waterRing"); if(!ring) return;
+  const oz=waterToday(), goal=128, pct=Math.min(100,Math.round(oz/goal*100));
+  document.getElementById("waterOz").textContent=oz+" oz";
+  document.getElementById("waterPct").textContent=pct+"%";
+  ring.style.background=`conic-gradient(var(--accent) ${Math.min(360,oz/goal*360)}deg,#2b313a 0deg)`;
+  document.getElementById("waterMessage").textContent=oz>=goal?"Gallon goal hit for today. 💧":`${goal-oz} oz remaining to reach 1 gallon.`;
+}
+function logBriskWalk(){
+  const min=+document.getElementById("walkMinutes").value||0;
+  if(min<=0) return;
+  db.workouts.push({date:today(),exercise:"Brisk walk",weight:0,reps:min,sets:1,rir:null,type:"cardio",minutes:min,distance:+document.getElementById("walkDistance").value||0,effort:+document.getElementById("walkEffort").value||5});
+  save(); document.getElementById("walkDistance").value=""; render();
+}
+
+function saveSettings(){db.cal=+document.getElementById("setCal").value||1750;db.pro=+document.getElementById("setPro").value||140;db.goal=+document.getElementById("setGoal").value||125;save();render()}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kengs-plan-backup.json";a.click()}
+function clearData(){if(confirm("Delete all tracker data?")){localStorage.removeItem("jacked125");location.reload()}}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+document.getElementById("pDate").value=today();render();
+</script>
 </body>
 </html>
