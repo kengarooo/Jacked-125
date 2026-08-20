@@ -1,460 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KENG’S PLAN — Bodybuilding Dashboard</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1115">
+<title>KENG’S PLAN</title>
 <style>
-:root{--bg:#0f1115;--card:#181b22;--muted:#9aa3b2;--text:#f5f7fa;--accent:#8be28b;--line:#2a2f39;--danger:#ff7272}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{padding:28px 18px 18px;background:linear-gradient(145deg,#171c20,#0f1115);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
-h1{margin:0;font-size:28px}h2{font-size:20px;margin:0 0 14px}h3{font-size:15px;margin:18px 0 8px}.sub{color:var(--muted);margin-top:5px}
-nav{display:flex;gap:8px;overflow:auto;padding:12px 14px;background:#12151a;position:sticky;top:92px;z-index:4;border-bottom:1px solid var(--line)}
-nav button{white-space:nowrap;background:#20252e;color:#cbd1da;border:0;border-radius:999px;padding:9px 13px}nav button.active{background:var(--accent);color:#101410;font-weight:700}
-main{max-width:1000px;margin:auto;padding:18px}.tab{display:none}.tab.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
-.stat{font-size:26px;font-weight:800}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
-.progress{height:10px;background:#292e37;border-radius:99px;overflow:hidden;margin:9px 0}.bar{height:100%;background:var(--accent);width:0}
-input,select,textarea{width:100%;background:#101319;border:1px solid #343a45;color:var(--text);border-radius:9px;padding:10px;margin-top:5px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:10px}
-button.primary{background:var(--accent);color:#101410;border:0;border-radius:9px;padding:11px 14px;font-weight:800;cursor:pointer}button.secondary{background:#252a33;color:white;border:1px solid #3a414d;border-radius:9px;padding:10px 13px;cursor:pointer}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted)}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
-.small{font-size:12px;color:var(--muted)}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#252b34;color:#cbd1da;font-size:12px}
-.alert{padding:11px;border-radius:10px;background:#20251f;border:1px solid #334a34;color:#d9f2d9;margin-bottom:12px}
-canvas{width:100%;height:230px;background:#101319;border-radius:10px}
-.exercise{padding:12px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border-bottom:0}
-footer{color:var(--muted);text-align:center;padding:30px 10px;font-size:12px}
-.mealthumb{width:54px;height:54px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}
-
-.fitness-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.fitness-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.day-tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
-.day-tabs::-webkit-scrollbar{display:none}
-.day-tab{white-space:nowrap;background:#222832;color:#cbd1da;border:1px solid #343b47;border-radius:999px;padding:9px 12px;font-weight:700;cursor:pointer}
-.day-tab.active{background:var(--accent);color:#101410;border-color:var(--accent)}
-.workout-exercise-card{background:#11151b;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
-.workout-exercise-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.workout-exercise-name{font-weight:800;font-size:15px}
-.workout-prescription{font-size:12px;color:var(--muted);margin-top:3px}
-.workout-number{flex:0 0 30px;width:30px;height:30px;border-radius:999px;background:#252b34;display:flex;align-items:center;justify-content:center;font-weight:800;color:#dce2ea}
-.rest-card{background:#11151b;border:1px dashed #343b47;border-radius:12px;padding:16px;text-align:center;color:var(--muted)}
-.fitness-tip{margin-top:10px;padding:10px;border-radius:10px;background:#20251f;border:1px solid #334a34;color:#d9f2d9;font-size:12px}
-
-
-.water-ring-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.water-ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) 0deg,#2b313a 0deg);position:relative}
-.water-ring:after{content:"";position:absolute;width:86px;height:86px;border-radius:50%;background:var(--card)}
-.water-ring-center{position:relative;z-index:1;text-align:center}.water-ring-center b{display:block;font-size:22px}
-.water-actions{display:grid;grid-template-columns:repeat(2,minmax(110px,1fr));gap:8px;flex:1;min-width:230px}
-.walk-card{background:#11151b;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
-.walk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+:root{--bg:#0f1115;--card:#181b22;--line:#2b313b;--text:#f5f7fa;--muted:#9aa3b2;--accent:#8be28b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;padding-bottom:88px}header{padding:calc(20px + env(safe-area-inset-top)) 18px 16px;background:#12151a;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}h1{margin:0;font-size:28px}h2{margin:0 0 12px;font-size:20px}h3{margin:16px 0 8px}.muted,.small{color:var(--muted);font-size:13px}main{max-width:820px;margin:auto;padding:14px}.tab{display:none}.tab.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{font-size:25px;font-weight:800}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}label{display:block;color:var(--muted);font-size:12px;margin-bottom:10px}input,select{width:100%;margin-top:5px;padding:12px;border-radius:10px;border:1px solid #363d48;background:#0e1116;color:white;font-size:16px}button{border:0;border-radius:10px;padding:11px 13px;font-weight:800}.primary{background:var(--accent);color:#101410}.secondary{background:#272d36;color:white}.danger{background:#4a2427;color:#ffb5b5}.bar{height:9px;background:#2a3038;border-radius:20px;overflow:hidden;margin-top:8px}.fill{height:100%;background:var(--accent);width:0}.bottom{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#15181e;border-top:1px solid #303640;z-index:10}.bottom button{background:none;color:#aab2be;padding:7px 2px;font-size:11px}.bottom button.on{color:var(--accent)}.pill{display:inline-block;background:#252b34;border-radius:999px;padding:5px 8px;font-size:11px;color:#cbd1da}.exercise{padding:10px 0;border-bottom:1px solid var(--line)}.exercise:last-child{border:0}.daytabs{display:flex;gap:7px;overflow:auto;padding-bottom:10px}.daytabs button{white-space:nowrap;background:#252b34;color:white}.daytabs button.on{background:var(--accent);color:#101410}.waterwrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.waterring{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--accent) 0deg,#2b313a 0deg)}.waterring:after{content:"";position:absolute;width:82px;height:82px;background:var(--card);border-radius:50%}.watercenter{z-index:1;text-align:center}.watercenter b{font-size:22px;display:block}.waterbuttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-width:220px}.thumb{width:64px;height:64px;object-fit:cover;border-radius:10px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 5px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted)}
 </style>
 </head>
 <body>
-<header>
-  <h1>KENG’S PLAN</h1>
-  <div class="sub">Build muscle • Get lean • Reveal the abs</div>
-</header>
-<nav id="nav">
-  <button class="active" data-tab="dashboard">Dashboard</button>
-  <button data-tab="nutrition">Nutrition</button>
-  <button data-tab="workouts">Fitness</button>
-  <button data-tab="progress">Progress</button>
-  <button data-tab="coach">Coach</button>
-  <button data-tab="settings">Settings</button>
-</nav>
+<header><h1>KENG’S PLAN</h1><div class="muted">Build muscle • Get lean • Reveal the abs</div></header>
 <main>
-
-<section id="dashboard" class="tab active">
-  <div class="alert"><b>Current phase:</b> Recomp / fat-loss while building muscle. Starting targets: 1,750 kcal and 140g protein. Adjustments should be based on several weeks of trends, not one weigh-in.</div>
-  <div class="grid">
-    <div class="card"><div class="label">Current weight</div><div class="stat" id="dashWeight">150 lb</div><div class="small">Goal: ~125 lb</div></div>
-    <div class="card"><div class="label">Waist</div><div class="stat" id="dashWaist">—</div><div class="small">Track weekly</div></div>
-    <div class="card"><div class="label">Calories</div><div class="stat" id="calStat">0 / 1750</div><div class="progress"><div class="bar" id="calBar"></div></div></div>
-    <div class="card"><div class="label">Protein</div><div class="stat" id="protStat">0 / 140g</div><div class="progress"><div class="bar" id="protBar"></div></div></div>
-  </div>
-  <div class="card"><h2>Today</h2><div id="todaySummary" class="small">Log food and a workout to start your day.</div></div>
-  
-<div class="card">
-  <div class="fitness-section-title"><div><div class="label">HYDRATION</div><h2 style="margin-bottom:4px">1-Gallon Water Goal</h2></div><span class="pill">128 oz</span></div>
-  <div class="water-ring-wrap">
-    <div class="water-ring" id="waterRing"><div class="water-ring-center"><b id="waterOz">0 oz</b><span class="small" id="waterPct">0%</span></div></div>
-    <div class="water-actions">
-      <button class="secondary" onclick="addWater(8)">+ 8 oz</button>
-      <button class="secondary" onclick="addWater(16)">+ 16 oz</button>
-      <button class="secondary" onclick="addWater(24)">+ 24 oz</button>
-      <button class="primary" onclick="addWater(32)">+ 32 oz</button>
-    </div>
-  </div>
-  <div class="row" style="margin-top:12px">
-    <label>Custom ounces<input id="customWater" type="number" min="1" placeholder="e.g. 20"></label>
-    <div style="align-self:end"><button class="secondary" onclick="addCustomWater()">Add custom</button></div>
-    <div style="align-self:end"><button class="secondary" onclick="resetWater()">Reset today</button></div>
-  </div>
-  <p class="small" id="waterMessage">Goal: 128 oz / 1 gallon per day.</p>
-</div>
-<div class="card"><h2>6-Pack Mission</h2><p class="small">Visible abs depend on abdominal muscle development plus getting lean enough for them to show. The app tracks waist, weight trend, ab training and nutrition—not just the scale.</p>
-  <div class="grid"><div><span class="label">Ab sessions this week</span><div class="stat" id="abWeek">0</div></div><div><span class="label">Workout sessions</span><div class="stat" id="wkWeek">0</div></div></div></div>
+<section id="home" class="tab on">
+<div class="grid"><div class="card"><div class="label">Weight</div><div class="stat" id="homeWeight">150 lb</div><div class="muted">Goal ~125 lb</div></div><div class="card"><div class="label">Waist</div><div class="stat" id="homeWaist">—</div></div><div class="card"><div class="label">Calories</div><div class="stat" id="homeCal">0 / 1750</div><div class="bar"><div class="fill" id="calFill"></div></div></div><div class="card"><div class="label">Protein</div><div class="stat" id="homePro">0 / 140g</div><div class="bar"><div class="fill" id="proFill"></div></div></div></div>
+<div class="card"><div class="label">HYDRATION</div><h2>1-Gallon Water Goal</h2><div class="waterwrap"><div class="waterring" id="waterRing"><div class="watercenter"><b id="waterOz">0 oz</b><span class="small" id="waterPct">0%</span></div></div><div class="waterbuttons"><button class="secondary" onclick="addWater(8)">+ 8 oz</button><button class="secondary" onclick="addWater(16)">+ 16 oz</button><button class="secondary" onclick="addWater(24)">+ 24 oz</button><button class="primary" onclick="addWater(32)">+ 32 oz</button></div></div><div class="row" style="margin-top:10px"><label>Custom oz<input id="customWater" type="number" min="1"></label><div style="align-self:end"><button class="secondary" onclick="addCustomWater()">Add</button></div></div><div class="small" id="waterMsg">128 oz goal</div></div>
+<div class="card"><h2>6-Pack Mission</h2><div class="small">Build your abs while gradually lowering body fat. Track waist, weight, protein, training and consistency—not only scale weight.</div></div>
 </section>
-
-<section id="nutrition" class="tab">
-  <div class="card"><h2>Log Food</h2>
-    <div class="row">
-      <label>Food<input id="foodName" placeholder="e.g. chicken breast"></label>
-      <label>Serving / amount<input id="foodAmt" placeholder="e.g. 150g"></label>
-    </div>
-    <div class="row">
-      <label>Calories<input id="foodCal" type="number" min="0"></label>
-      <label>Protein (g)<input id="foodPro" type="number" min="0" step=".1"></label>
-      <label>Carbs (g)<input id="foodCarb" type="number" min="0" step=".1"></label>
-      <label>Fat (g)<input id="foodFat" type="number" min="0" step=".1"></label>
-    </div>
-    <button class="primary" onclick="addFood()">Add food</button>
-  </div>
-  
-  <div class="card"><h2>📸 Photo Meal</h2>
-    <p class="small">Take a food picture on your iPhone, save it with the meal, then enter the macro estimate. You can send the same photo to ChatGPT for an estimate and copy the numbers back here. A future cloud version can automate the analysis.</p>
-    <label>Take / choose meal photo
-      <input id="mealPhoto" type="file" accept="image/*" capture="environment" onchange="previewMealPhoto(event)">
-    </label>
-    <div id="mealPhotoPreviewWrap" style="display:none;margin:10px 0">
-      <img id="mealPhotoPreview" alt="Meal preview" style="width:100%;max-height:320px;object-fit:cover;border-radius:12px;border:1px solid #343a45">
-    </div>
-    <div class="row">
-      <label>Meal name<input id="photoMealName" placeholder="e.g. chicken rice bowl"></label>
-      <label>Calories<input id="photoCal" type="number" min="0"></label>
-      <label>Protein (g)<input id="photoPro" type="number" min="0" step=".1"></label>
-      <label>Carbs (g)<input id="photoCarb" type="number" min="0" step=".1"></label>
-      <label>Fat (g)<input id="photoFat" type="number" min="0" step=".1"></label>
-    </div>
-    <div class="row">
-      <button class="secondary" onclick="copyPhotoPrompt()">Copy prompt for ChatGPT</button>
-      <button class="primary" onclick="savePhotoMeal()">Save photo meal</button>
-    </div>
-    <p id="photoHint" class="small"></p>
-  </div>
-
-<div class="card"><h2>Today's Macros</h2><div class="grid">
-    <div><span class="label">Calories</span><div class="stat" id="nCal">0</div></div>
-    <div><span class="label">Protein</span><div class="stat" id="nPro">0g</div></div>
-    <div><span class="label">Carbs</span><div class="stat" id="nCarb">0g</div></div>
-    <div><span class="label">Fat</span><div class="stat" id="nFat">0g</div></div>
-  </div></div>
-  <div class="card"><h2>Food Log</h2><div id="foodTable"></div></div>
+<section id="food" class="tab">
+<div class="card"><h2>Log Food</h2><div class="row"><label>Food<input id="foodName"></label><label>Amount<input id="foodAmt" placeholder="150 g"></label></div><div class="row"><label>Calories<input id="foodCal" type="number"></label><label>Protein<input id="foodPro" type="number" step=".1"></label><label>Carbs<input id="foodCarb" type="number" step=".1"></label><label>Fat<input id="foodFat" type="number" step=".1"></label></div><button class="primary" onclick="addFood()">Add food</button></div>
+<div class="card"><h2>📸 Photo Meal</h2><div class="small">Take a picture, send the same picture to ChatGPT for a macro estimate, then save those numbers here.</div><br><input id="mealPhoto" type="file" accept="image/*" capture="environment" onchange="previewPhoto(event)"><img id="mealPreview" style="display:none;width:100%;max-height:300px;object-fit:cover;border-radius:12px;margin-top:10px"><div class="row" style="margin-top:10px"><label>Meal name<input id="pmName"></label><label>Calories<input id="pmCal" type="number"></label><label>Protein<input id="pmPro" type="number"></label><label>Carbs<input id="pmCarb" type="number"></label><label>Fat<input id="pmFat" type="number"></label></div><button class="primary" onclick="savePhotoMeal()">Save photo meal</button></div>
+<div class="card"><h2>Today’s Macros</h2><div class="grid"><div><div class="label">Calories</div><div class="stat" id="macroCal">0</div></div><div><div class="label">Protein</div><div class="stat" id="macroPro">0g</div></div><div><div class="label">Carbs</div><div class="stat" id="macroCarb">0g</div></div><div><div class="label">Fat</div><div class="stat" id="macroFat">0g</div></div></div></div>
+<div class="card"><h2>Food Log</h2><div id="foodLog"></div></div>
 </section>
-
-
-<section id="workouts" class="tab">
-  <div class="card">
-    <div class="fitness-hero">
-      <div>
-        <div class="label">FITNESS</div>
-        <h2 style="margin-bottom:6px">Your Training Plan</h2>
-        <p class="small" style="margin:0">4 lifting days + 3 short ab sessions. Focus on progressive overload, good form, and getting close to failure.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="fitness-section-title">
-      <div>
-        <div class="label">TODAY</div>
-        <h2 style="margin-bottom:4px" id="todayWorkoutTitle">Today’s Workout</h2>
-      </div>
-      <span class="pill" id="todayWorkoutTag">Plan</span>
-    </div>
-    <div id="todayWorkout"></div>
-  </div>
-
-  <div class="card">
-    <div class="fitness-section-title">
-      <div>
-        <div class="label">WEEKLY SPLIT</div>
-        <h2 style="margin-bottom:4px">Choose a Workout Day</h2>
-      </div>
-    </div>
-    <div class="day-tabs" id="dayTabs"></div>
-    <div id="selectedDayWorkout"></div>
-  </div>
-
-  
-<div class="card" id="recoveryCard">
-  <div class="fitness-section-title"><div><div class="label">RECOVERY DAY</div><h2 style="margin-bottom:4px">Brisk Walk</h2></div><span class="pill">Optional cardio</span></div>
-  <p class="small">Use this on non-lifting days. Keep the pace brisk but comfortable enough that it doesn’t interfere with recovery.</p>
-  <div class="walk-card">
-    <div class="walk-grid">
-      <label>Minutes<input id="walkMinutes" type="number" min="1" value="30"></label>
-      <label>Distance (mi)<input id="walkDistance" type="number" min="0" step=".1" placeholder="optional"></label>
-      <label>Effort (1–10)<input id="walkEffort" type="number" min="1" max="10" value="5"></label>
-    </div>
-    <button class="primary" onclick="logBriskWalk()">Log brisk walk</button>
-  </div>
-</div>
-<div class="card">
-    <div class="fitness-section-title">
-      <div>
-        <div class="label">TRAINING LOG</div>
-        <h2 style="margin-bottom:4px">Log a Set</h2>
-      </div>
-    </div>
-    <p class="small">RIR = reps you could still do with good form. Most sets should finish around RIR 1–3.</p>
-    <div class="row">
-      <label>Exercise<select id="exSelect"></select></label>
-      <label>Weight (lb)<input id="exWeight" type="number" step=".5"></label>
-      <label>Reps<input id="exReps" type="number"></label>
-      <label>Sets<input id="exSets" type="number" value="1"></label>
-      <label>RIR<input id="exRir" type="number" min="0" max="5" value="2"></label>
-    </div>
-    <button class="primary" onclick="addWorkout()">Save set</button>
-  </div>
-
-  <div class="card">
-    <div class="fitness-section-title">
-      <div>
-        <div class="label">HISTORY</div>
-        <h2 style="margin-bottom:4px">Recent Training</h2>
-      </div>
-    </div>
-    <div id="workoutTable"></div>
-  </div>
+<section id="fitness" class="tab">
+<div class="card"><div class="label">TODAY</div><h2 id="todayWorkoutTitle">Today’s Workout</h2><div id="todayWorkout"></div></div>
+<div class="card"><div class="label">WEEKLY SPLIT</div><h2>Choose a Day</h2><div class="daytabs" id="dayTabs"></div><div id="dayWorkout"></div></div>
+<div class="card"><div class="label">RECOVERY DAY</div><h2>Brisk Walk</h2><div class="row"><label>Minutes<input id="walkMinutes" type="number" value="30"></label><label>Distance mi<input id="walkDistance" type="number" step=".1"></label><label>Effort 1–10<input id="walkEffort" type="number" min="1" max="10" value="5"></label></div><button class="primary" onclick="logWalk()">Log brisk walk</button></div>
+<div class="card"><div class="label">TRAINING LOG</div><h2>Log a Set</h2><div class="small">RIR = how many good reps you had left. Aim around 1–3 most sets.</div><br><div class="row"><label>Exercise<select id="exSelect"></select></label><label>Weight lb<input id="exWeight" type="number"></label><label>Reps<input id="exReps" type="number"></label><label>Sets<input id="exSets" type="number" value="1"></label><label>RIR<input id="exRir" type="number" value="2"></label></div><button class="primary" onclick="logLift()">Save set</button></div>
+<div class="card"><h2>Recent Training</h2><div id="trainingLog"></div></div>
 </section>
-
 <section id="progress" class="tab">
-  <div class="card"><h2>Daily / Weekly Check-in</h2>
-    <div class="row">
-      <label>Date<input id="pDate" type="date"></label><label>Weight (lb)<input id="pWeight" type="number" step=".1"></label><label>Waist (in)<input id="pWaist" type="number" step=".1"></label>
-    </div>
-    <div class="row">
-      <label>Hips (in)<input id="pHips" type="number" step=".1"></label><label>Chest (in)<input id="pChest" type="number" step=".1"></label><label>Arm (in)<input id="pArm" type="number" step=".1"></label><label>Thigh (in)<input id="pThigh" type="number" step=".1"></label>
-    </div>
-    <button class="primary" onclick="addProgress()">Save check-in</button>
-  </div>
-  <div class="card"><h2>Weight Trend</h2><canvas id="weightChart" width="900" height="230"></canvas></div>
-  <div class="card"><h2>Measurements</h2><div id="progressTable"></div></div>
+<div class="card"><h2>Weigh-In & Measurements</h2><div class="small">Choose any date. Saving the same date again updates that day instead of creating a duplicate.</div><br><div class="row"><label>Date<input id="pDate" type="date"></label><label>Weight lb<input id="pWeight" type="number" step=".1"></label><label>Waist in<input id="pWaist" type="number" step=".1"></label></div><div class="row"><label>Hips<input id="pHips" type="number" step=".1"></label><label>Chest<input id="pChest" type="number" step=".1"></label><label>Arm<input id="pArm" type="number" step=".1"></label><label>Thigh<input id="pThigh" type="number" step=".1"></label></div><button class="primary" onclick="saveProgress()">Save check-in</button></div>
+<div class="card"><h2>History</h2><div id="progressLog"></div></div>
 </section>
-
-<section id="coach" class="tab">
-  <div class="card"><h2>Coach Snapshot</h2><div id="coachText"></div></div>
-  <div class="card"><h2>How we adjust</h2>
-    <ul class="small"><li>Protein stays high to support muscle retention/growth.</li><li>We use weekly averages and waist trends, not single-day scale changes.</li><li>If weight/waist stall for several weeks, calories may be adjusted modestly.</li><li>If performance, recovery or hunger deteriorate, calories may need to come up.</li><li>The goal is a lean, muscular physique—not simply the lowest scale number.</li></ul>
-  </div>
-</section>
-
-<section id="settings" class="tab">
-  <div class="card"><h2>Your Targets</h2>
-    <div class="row"><label>Calorie target<input id="setCal" type="number"></label><label>Protein target (g)<input id="setPro" type="number"></label><label>Goal weight (lb)<input id="setGoal" type="number"></label></div>
-    <button class="primary" onclick="saveSettings()">Save targets</button>
-  </div>
-  <div class="card"><h2>Data</h2><p class="small">Your entries are stored locally in this browser. Use Export to back up your data.</p><button class="secondary" onclick="exportData()">Export JSON</button> <button class="secondary" onclick="clearData()">Clear all data</button></div>
-</section>
-
+<section id="more" class="tab"><div class="card"><h2>Targets</h2><div class="row"><label>Calories<input id="setCal" type="number"></label><label>Protein<input id="setPro" type="number"></label><label>Goal weight<input id="setGoal" type="number"></label></div><button class="primary" onclick="saveTargets()">Save targets</button></div><div class="card"><h2>Backup</h2><button class="secondary" onclick="exportData()">Export data</button></div></section>
 </main>
-<footer>KENG’S PLAN • Personal training & nutrition tracker • Local-only prototype</footer>
-
+<nav class="bottom"><button class="on" data-tab="home">🏠<br>Home</button><button data-tab="food">🥩<br>Food</button><button data-tab="fitness">🏋️<br>Fitness</button><button data-tab="progress">📏<br>Progress</button><button data-tab="more">⚙️<br>More</button></nav>
 <script>
 const defaults={cal:1750,pro:140,goal:125,foods:[],workouts:[],progress:[],water:{}};
-let db=JSON.parse(localStorage.getItem("jacked125")||"null")||defaults;
-db={...defaults,...db};
+let db;try{db=JSON.parse(localStorage.getItem('jacked125')||'null')||defaults}catch(e){db=defaults}db={...defaults,...db,water:db.water||{}};
 const program={
-"MONDAY — GLUTES + QUADS":[["Bulgarian split squat","4 × 8–15/leg"],["Goblet squat","4 × 12–20"],["DB Romanian deadlift","4 × 10–15"],["DB hip thrust","4 × 12–20"],["Reverse lunge","3 × 10–15/leg"],["Calf raise","4 × 15–30"]],
-"TUESDAY — UPPER BODY":[["One-arm DB row","4 × 10–20/side"],["DB shoulder press","4 × 8–15"],["Bench-supported row","3 × 12–20/side"],["Lateral raise","4 × 12–25"],["DB chest press","3 × 10–20"],["DB biceps curl","3 × 10–20"],["Overhead triceps extension","3 × 12–20"]],
-"THURSDAY — GLUTES + HAMSTRINGS":[["Bulgarian split squat","3 × 10–15/leg"],["Single-leg Romanian deadlift","4 × 10–15/leg"],["DB hip thrust","4 × 15–25"],["DB sumo squat","4 × 12–20"],["DB bench step-up","3 × 8–15/leg"],["Glute bridge burnout","2 × 25–40"]],
-"FRIDAY — SHOULDERS + BACK + ARMS":[["One-arm DB row","4 × 12–20"],["DB shoulder press","3 × 10–15"],["Lateral raise","4 × 15–30"],["Rear-delt fly","4 × 15–25"],["DB chest press","3 × 12–20"],["Hammer curl","3 × 12–20"],["Triceps extension","3 × 12–20"],["Push-ups","2 × near failure"]],
-"ABS — 3X/WEEK":[["Weighted crunch","3 × 10–15"],["Reverse crunch","3 × 12–20"],["Plank","3 × 30–60 sec"],["Bench reverse crunch","3 × 12–20"],["Dead bug","3 × 10–15/side"],["Side plank","3 × 30–45 sec/side"],["Weighted sit-up","3 × 10–15"],["Leg raise/reverse crunch","3 × 10–20"]]
+'MONDAY — GLUTES + QUADS':[['Bulgarian split squat','4 × 8–15/leg'],['Goblet squat','4 × 12–20'],['DB Romanian deadlift','4 × 10–15'],['DB hip thrust','4 × 12–20'],['Reverse lunge','3 × 10–15/leg'],['Calf raise','4 × 15–30']],
+'TUESDAY — UPPER BODY':[['One-arm DB row','4 × 10–20/side'],['DB shoulder press','4 × 8–15'],['Bench-supported row','3 × 12–20/side'],['Lateral raise','4 × 12–25'],['DB chest press','3 × 10–20'],['DB biceps curl','3 × 10–20'],['Overhead triceps extension','3 × 12–20']],
+'THURSDAY — GLUTES + HAMSTRINGS':[['Bulgarian split squat','3 × 10–15/leg'],['Single-leg Romanian deadlift','4 × 10–15/leg'],['DB hip thrust','4 × 15–25'],['DB sumo squat','4 × 12–20'],['DB bench step-up','3 × 8–15/leg'],['Glute bridge burnout','2 × 25–40']],
+'FRIDAY — SHOULDERS + BACK + ARMS':[['One-arm DB row','4 × 12–20'],['DB shoulder press','3 × 10–15'],['Lateral raise','4 × 15–30'],['Rear-delt fly','4 × 15–25'],['DB chest press','3 × 12–20'],['Hammer curl','3 × 12–20'],['Triceps extension','3 × 12–20'],['Push-ups','2 × near failure']],
+'ABS — 3X/WEEK':[['Weighted crunch','3 × 10–15'],['Reverse crunch','3 × 12–20'],['Plank','3 × 30–60 sec'],['Dead bug','3 × 10–15/side'],['Side plank','3 × 30–45 sec/side']]
 };
-const allExercises=[...new Set(Object.values(program).flat().map(x=>x[0]))];
-
-function save(){localStorage.setItem("jacked125",JSON.stringify(db))}
-function today(){return new Date().toISOString().slice(0,10)}
-function todayFoods(){return db.foods.filter(x=>x.date===today())}
-function totals(){return todayFoods().reduce((a,x)=>{a.cal+=+x.cal||0;a.pro+=+x.pro||0;a.carb+=+x.carb||0;a.fat+=+x.fat||0;return a},{cal:0,pro:0,carb:0,fat:0})}
-function render(){
- document.getElementById("setCal").value=db.cal;document.getElementById("setPro").value=db.pro;document.getElementById("setGoal").value=db.goal;
- const t=totals(); document.getElementById("nCal").textContent=Math.round(t.cal);document.getElementById("nPro").textContent=Math.round(t.pro)+"g";document.getElementById("nCarb").textContent=Math.round(t.carb)+"g";document.getElementById("nFat").textContent=Math.round(t.fat)+"g";
- document.getElementById("calStat").textContent=Math.round(t.cal)+" / "+db.cal;document.getElementById("protStat").textContent=Math.round(t.pro)+" / "+db.pro+"g";
- document.getElementById("calBar").style.width=Math.min(100,t.cal/db.cal*100)+"%";document.getElementById("protBar").style.width=Math.min(100,t.pro/db.pro*100)+"%";
- let latest=db.progress[db.progress.length-1];document.getElementById("dashWeight").textContent=(latest?.weight||150)+" lb";document.getElementById("dashWaist").textContent=latest?.waist?latest.waist+'"' :"—";
- document.getElementById("todaySummary").textContent=`${todayFoods().length} foods logged • ${Math.round(t.pro)}g protein • ${Math.round(t.cal)} calories`;
- const wk=new Date();wk.setDate(wk.getDate()-6);const cutoff=wk.toISOString().slice(0,10);
- const ww=db.workouts.filter(x=>x.date>=cutoff);document.getElementById("wkWeek").textContent=new Set(ww.map(x=>x.date)).size;
- document.getElementById("abWeek").textContent=ww.filter(x=>x.exercise.toLowerCase().includes("crunch")||x.exercise.toLowerCase().includes("plank")||x.exercise.toLowerCase().includes("dead bug")||x.exercise.toLowerCase().includes("sit-up")||x.exercise.toLowerCase().includes("leg raise")).length;
- renderFoods();renderWorkouts();renderProgress();renderProgram();renderCoach();renderWater();
-}
-function addFood(){let n=document.getElementById("foodName").value;if(!n)return;db.foods.push({date:today(),name:n,amt:document.getElementById("foodAmt").value,cal:+document.getElementById("foodCal").value||0,pro:+document.getElementById("foodPro").value||0,carb:+document.getElementById("foodCarb").value||0,fat:+document.getElementById("foodFat").value||0});save();["foodName","foodAmt","foodCal","foodPro","foodCarb","foodFat"].forEach(id=>document.getElementById(id).value="");render()}
-function renderFoods(){let a=todayFoods();document.getElementById("foodTable").innerHTML=a.length?`<table><tr><th>Food</th><th>Amount</th><th>Cal</th><th>Protein</th><th></th></tr>${a.map((x,i)=>`<tr><td>${x.photo?`<img class="mealthumb" src="${x.photo}" alt="meal"><br>`:""}${x.name}</td><td>${x.amt||""}</td><td>${x.cal}</td><td>${x.pro}g</td><td><button class="secondary" onclick="delFood(${db.foods.indexOf(x)})">×</button></td></tr>`).join("")}</table>`:"<span class='small'>Nothing logged yet.</span>"}
-function delFood(i){db.foods.splice(i,1);save();render()}
-function addWorkout(){let e=document.getElementById("exSelect").value;if(!e)return;db.workouts.push({date:today(),exercise:e,weight:+document.getElementById("exWeight").value||0,reps:+document.getElementById("exReps").value||0,sets:+document.getElementById("exSets").value||1,rir:+document.getElementById("exRir").value||0});save();render()}
-function renderWorkouts(){
- let a=db.workouts.slice(-25).reverse();
- document.getElementById("workoutTable").innerHTML=a.length?`<table><tr><th>Date</th><th>Workout</th><th>Details</th><th>Effort</th></tr>${a.map(x=>{
- if(x.type==="cardio"||x.exercise==="Brisk walk") return `<tr><td>${x.date}</td><td>${x.exercise}</td><td>${x.minutes||x.reps||0} min${x.distance?` • ${x.distance} mi`:""}</td><td>${x.effort?x.effort+"/10":"—"}</td></tr>`;
- return `<tr><td>${x.date}</td><td>${x.exercise}</td><td>${x.weight} lb • ${x.reps} reps × ${x.sets}</td><td>${x.rir===null||x.rir===undefined?"—":"RIR "+x.rir}</td></tr>`;
- }).join("")}</table>`:"<span class='small'>No workouts logged yet.</span>";
-}</td><td>${x.exercise}</td><td>${x.weight} lb</td><td>${x.reps}</td><td>${x.sets}</td><td>${x.rir}</td></tr>`).join("")}</table>`:"<span class='small'>No workouts logged yet.</span>"}
-
-let selectedWorkoutDay = "MONDAY — GLUTES + QUADS";
-
-function friendlyDayName(key){
-  if(key.startsWith("MONDAY")) return "Mon • Glutes + Quads";
-  if(key.startsWith("TUESDAY")) return "Tue • Upper";
-  if(key.startsWith("THURSDAY")) return "Thu • Glutes + Hams";
-  if(key.startsWith("FRIDAY")) return "Fri • Shoulders + Back + Arms";
-  if(key.startsWith("ABS")) return "Abs";
-  return key;
-}
-
-function workoutForToday(){
-  const day = new Date().getDay(); // 0 sun
-  if(day===1) return "MONDAY — GLUTES + QUADS";
-  if(day===2) return "TUESDAY — UPPER BODY";
-  if(day===4) return "THURSDAY — GLUTES + HAMSTRINGS";
-  if(day===5) return "FRIDAY — SHOULDERS + BACK + ARMS";
-  return null;
-}
-
-function renderExerciseCards(arr){
-  if(!arr || !arr.length) return '<div class="rest-card">No exercises scheduled.</div>';
-  return arr.map((x,i)=>`
-    <div class="workout-exercise-card">
-      <div class="workout-exercise-top">
-        <div style="display:flex;gap:10px">
-          <div class="workout-number">${i+1}</div>
-          <div>
-            <div class="workout-exercise-name">${x[0]}</div>
-            <div class="workout-prescription">${x[1]}</div>
-          </div>
-        </div>
-      </div>
-    </div>`).join("");
-}
-
-function chooseWorkoutDay(day){
-  selectedWorkoutDay = day;
-  renderProgram();
-}
-
-function renderProgram(){
-  const trainingKeys = Object.keys(program);
-  const all = [...new Set(Object.values(program).flat().map(x=>x[0]))];
-  document.getElementById("exSelect").innerHTML = all.map(x=>`<option>${x}</option>`).join("");
-
-  // Weekly split tabs
-  document.getElementById("dayTabs").innerHTML = trainingKeys.map(key=>`
-    <button class="day-tab ${key===selectedWorkoutDay?'active':''}" onclick='chooseWorkoutDay(${JSON.stringify(key)})'>
-      ${friendlyDayName(key)}
-    </button>`).join("");
-
-  // Selected day
-  const selected = program[selectedWorkoutDay] || [];
-  document.getElementById("selectedDayWorkout").innerHTML =
-    `<div class="fitness-tip"><b>${friendlyDayName(selectedWorkoutDay)}</b> • Move with control. When you hit the top of the rep range with ~1–2 RIR, make the movement harder next time.</div>` +
-    `<div style="margin-top:12px">${renderExerciseCards(selected)}</div>`;
-
-  // Today's workout
-  const todayKey = workoutForToday();
-  const title = document.getElementById("todayWorkoutTitle");
-  const tag = document.getElementById("todayWorkoutTag");
-  const todayBox = document.getElementById("todayWorkout");
-
-  if(todayKey){
-    title.textContent = friendlyDayName(todayKey);
-    tag.textContent = "Lift day";
-    todayBox.innerHTML = renderExerciseCards(program[todayKey]);
-  }else{
-    title.textContent = "Recovery / Abs / Brisk Walk";
-    tag.textContent = "Recovery";
-    todayBox.innerHTML = `
-      <div class="rest-card">
-        <b>No main lifting session scheduled today.</b><br><br>
-        Walk, recover, and do an ab session if it fits your week.
-      </div>
-      <div style="margin-top:12px">${renderExerciseCards(program["ABS — 3X/WEEK"])}</div>`;
-  }
-}</h3>${arr.map(x=>`<div class="exercise"><b>${x[0]}</b><br><span class="small">${x[1]}</span></div>`).join("")}`).join("");document.getElementById("exSelect").innerHTML=allExercises.map(x=>`<option>${x}</option>`).join("")}
-function addProgress(){let d=document.getElementById("pDate").value||today();db.progress.push({date:d,weight:+document.getElementById("pWeight").value||null,waist:+document.getElementById("pWaist").value||null,hips:+document.getElementById("pHips").value||null,chest:+document.getElementById("pChest").value||null,arm:+document.getElementById("pArm").value||null,thigh:+document.getElementById("pThigh").value||null});db.progress.sort((a,b)=>a.date.localeCompare(b.date));save();render()}
-function renderProgress(){let a=db.progress.slice().reverse();document.getElementById("progressTable").innerHTML=a.length?`<table><tr><th>Date</th><th>Weight</th><th>Waist</th><th>Hips</th><th>Chest</th><th>Arm</th><th>Thigh</th></tr>${a.map(x=>`<tr><td>${x.date}</td><td>${x.weight||"—"}</td><td>${x.waist||"—"}</td><td>${x.hips||"—"}</td><td>${x.chest||"—"}</td><td>${x.arm||"—"}</td><td>${x.thigh||"—"}</td></tr>`).join("")}</table>`:"<span class='small'>No check-ins yet.</span>";drawChart()}
-function drawChart(){let c=document.getElementById("weightChart"),ctx=c.getContext("2d"),a=db.progress.filter(x=>x.weight);ctx.clearRect(0,0,c.width,c.height);if(!a.length){ctx.fillStyle="#9aa3b2";ctx.fillText("Add weigh-ins to see your trend.",20,35);return}let min=Math.min(...a.map(x=>x.weight),db.goal)-2,max=Math.max(...a.map(x=>x.weight))+2;ctx.strokeStyle="#8be28b";ctx.lineWidth=3;ctx.beginPath();a.forEach((x,i)=>{let px=30+i*(c.width-60)/Math.max(1,a.length-1),py=c.height-25-(x.weight-min)/(max-min)*(c.height-50);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.fillStyle="#f5f7fa";a.forEach((x,i)=>{let px=30+i*(c.width-60)/Math.max(1,a.length-1),py=c.height-25-(x.weight-min)/(max-min)*(c.height-50);ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.fillText(x.weight,px-10,py-9)})}
-function renderCoach(){let a=db.progress.filter(x=>x.weight), latest=a.at(-1), prev=a.length>1?a.at(-2):null;let text=`<p><b>Current focus:</b> build/retain muscle while gradually reducing body fat.</p>`;if(latest){text+=`<p>Latest check-in: <b>${latest.weight} lb</b>${latest.waist?`, waist <b>${latest.waist}"</b>`:""}.</p>`}if(latest&&prev){let diff=(latest.weight-prev.weight).toFixed(1);text+=`<p>Change from previous logged check-in: <b>${diff>0?"+":""}${diff} lb</b>. We need multiple data points before changing calories.</p>`}text+=`<p>Targets: <b>${db.cal} kcal</b> and <b>${db.pro}g protein</b>. Goal weight: <b>~${db.goal} lb</b>. Six-pack goal: track waist + ab strength + photos, not scale weight alone.</p>`;document.getElementById("coachText").innerHTML=text}
-
-let currentMealPhoto = "";
-
-function previewMealPhoto(event){
-  const file = event.target.files && event.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    currentMealPhoto = e.target.result;
-    document.getElementById("mealPhotoPreview").src = currentMealPhoto;
-    document.getElementById("mealPhotoPreviewWrap").style.display = "block";
-    document.getElementById("photoHint").textContent =
-      "Photo attached. Send this same photo to ChatGPT for an estimate of calories, protein, carbs, and fat.";
-  };
-  reader.readAsDataURL(file);
-}
-
-function copyPhotoPrompt(){
-  const text = "Estimate the calories, protein, carbs, and fat in this meal from the photo. Give me one best estimate plus a reasonable range. I am tracking macros for a bodybuilding cut.";
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>{
-      document.getElementById("photoHint").textContent =
-        "Prompt copied. Send the meal photo to ChatGPT, paste the prompt, then enter the estimate here.";
-    }).catch(()=>{
-      document.getElementById("photoHint").textContent = text;
-    });
-  } else {
-    document.getElementById("photoHint").textContent = text;
-  }
-}
-
-function savePhotoMeal(){
-  const item = {
-    date: today(),
-    name: document.getElementById("photoMealName").value || "Photo meal",
-    amt: "photo",
-    cal: +document.getElementById("photoCal").value || 0,
-    pro: +document.getElementById("photoPro").value || 0,
-    carb: +document.getElementById("photoCarb").value || 0,
-    fat: +document.getElementById("photoFat").value || 0,
-    photo: currentMealPhoto
-  };
-  db.foods.push(item);
-  save();
-  ["photoMealName","photoCal","photoPro","photoCarb","photoFat"].forEach(id=>{
-    document.getElementById(id).value="";
-  });
-  document.getElementById("mealPhoto").value="";
-  document.getElementById("mealPhotoPreviewWrap").style.display="none";
-  currentMealPhoto="";
-  document.getElementById("photoHint").textContent="Saved.";
-  render();
-}
-
-
-function waterToday(){ if(!db.water) db.water={}; return +db.water[today()]||0; }
-function setWaterToday(oz){ if(!db.water) db.water={}; db.water[today()]=Math.max(0,Math.round(oz)); save(); renderWater(); }
-function addWater(oz){ setWaterToday(waterToday()+(+oz||0)); }
-function addCustomWater(){ const el=document.getElementById("customWater"); const oz=+el.value||0; if(oz>0){addWater(oz); el.value="";} }
-function resetWater(){ setWaterToday(0); }
-function renderWater(){
-  const ring=document.getElementById("waterRing"); if(!ring) return;
-  const oz=waterToday(), goal=128, pct=Math.min(100,Math.round(oz/goal*100));
-  document.getElementById("waterOz").textContent=oz+" oz";
-  document.getElementById("waterPct").textContent=pct+"%";
-  ring.style.background=`conic-gradient(var(--accent) ${Math.min(360,oz/goal*360)}deg,#2b313a 0deg)`;
-  document.getElementById("waterMessage").textContent=oz>=goal?"Gallon goal hit for today. 💧":`${goal-oz} oz remaining to reach 1 gallon.`;
-}
-function logBriskWalk(){
-  const min=+document.getElementById("walkMinutes").value||0;
-  if(min<=0) return;
-  db.workouts.push({date:today(),exercise:"Brisk walk",weight:0,reps:min,sets:1,rir:null,type:"cardio",minutes:min,distance:+document.getElementById("walkDistance").value||0,effort:+document.getElementById("walkEffort").value||5});
-  save(); document.getElementById("walkDistance").value=""; render();
-}
-
-function saveSettings(){db.cal=+document.getElementById("setCal").value||1750;db.pro=+document.getElementById("setPro").value||140;db.goal=+document.getElementById("setGoal").value||125;save();render()}
-function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kengs-plan-backup.json";a.click()}
-function clearData(){if(confirm("Delete all tracker data?")){localStorage.removeItem("jacked125");location.reload()}}
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
-document.getElementById("pDate").value=today();render();
+let selectedDay='MONDAY — GLUTES + QUADS',photoData='';
+function today(){return new Date().toISOString().slice(0,10)}function save(){localStorage.setItem('jacked125',JSON.stringify(db))}
+function todayFoods(){return db.foods.filter(x=>x.date===today())}function totals(){return todayFoods().reduce((a,x)=>{a.cal+=+x.cal||0;a.pro+=+x.pro||0;a.carb+=+x.carb||0;a.fat+=+x.fat||0;return a},{cal:0,pro:0,carb:0,fat:0})}
+function switchTab(id){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.bottom button').forEach(x=>x.classList.toggle('on',x.dataset.tab===id));render()}
+document.querySelectorAll('.bottom button').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+function render(){const t=totals(),last=db.progress[db.progress.length-1];homeWeight.textContent=(last&&last.weight?last.weight:150)+' lb';homeWaist.textContent=last&&last.waist?last.waist+' in':'—';homeCal.textContent=Math.round(t.cal)+' / '+db.cal;homePro.textContent=Math.round(t.pro)+' / '+db.pro+'g';calFill.style.width=Math.min(100,t.cal/db.cal*100)+'%';proFill.style.width=Math.min(100,t.pro/db.pro*100)+'%';macroCal.textContent=Math.round(t.cal);macroPro.textContent=Math.round(t.pro)+'g';macroCarb.textContent=Math.round(t.carb)+'g';macroFat.textContent=Math.round(t.fat)+'g';setCal.value=db.cal;setPro.value=db.pro;setGoal.value=db.goal;renderWater();renderFoods();renderFitness();renderProgress()}
+function addWater(oz){db.water[today()]=(+db.water[today()]||0)+oz;save();renderWater()}function addCustomWater(){const oz=+customWater.value||0;if(oz>0){addWater(oz);customWater.value=''}}function renderWater(){const oz=+db.water[today()]||0,p=Math.min(100,Math.round(oz/128*100));waterOz.textContent=oz+' oz';waterPct.textContent=p+'%';waterRing.style.background=`conic-gradient(var(--accent) ${Math.min(360,oz/128*360)}deg,#2b313a 0deg)`;waterMsg.textContent=oz>=128?'Gallon goal hit 💧':(128-oz)+' oz remaining'}
+function addFood(){if(!foodName.value.trim())return;db.foods.push({date:today(),name:foodName.value.trim(),amt:foodAmt.value,cal:+foodCal.value||0,pro:+foodPro.value||0,carb:+foodCarb.value||0,fat:+foodFat.value||0});save();[foodName,foodAmt,foodCal,foodPro,foodCarb,foodFat].forEach(x=>x.value='');render()}
+function previewPhoto(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{photoData=ev.target.result;mealPreview.src=photoData;mealPreview.style.display='block'};r.readAsDataURL(f)}
+function savePhotoMeal(){db.foods.push({date:today(),name:pmName.value||'Photo meal',amt:'photo',cal:+pmCal.value||0,pro:+pmPro.value||0,carb:+pmCarb.value||0,fat:+pmFat.value||0,photo:photoData});save();[pmName,pmCal,pmPro,pmCarb,pmFat].forEach(x=>x.value='');mealPhoto.value='';mealPreview.style.display='none';photoData='';render()}
+function deleteFood(i){db.foods.splice(i,1);save();render()}function renderFoods(){const arr=todayFoods();foodLog.innerHTML=arr.length?arr.map(x=>{const i=db.foods.indexOf(x);return `<div class="exercise">${x.photo?`<img class="thumb" src="${x.photo}"><br>`:''}<b>${x.name}</b> ${x.amt||''}<br><span class="small">${x.cal} kcal • ${x.pro}g P • ${x.carb}g C • ${x.fat}g F</span><br><button class="danger" onclick="deleteFood(${i})">Delete</button></div>`}).join(''):'<span class="small">No food logged today.</span>'}
+function friendly(k){if(k.startsWith('MONDAY'))return'Mon • Glutes + Quads';if(k.startsWith('TUESDAY'))return'Tue • Upper';if(k.startsWith('THURSDAY'))return'Thu • Glutes + Hams';if(k.startsWith('FRIDAY'))return'Fri • Back + Arms';return'Abs'}function cards(a){return a.map((x,i)=>`<div class="exercise"><b>${i+1}. ${x[0]}</b><br><span class="small">${x[1]}</span></div>`).join('')}
+function todayKey(){const d=new Date().getDay();return d===1?'MONDAY — GLUTES + QUADS':d===2?'TUESDAY — UPPER BODY':d===4?'THURSDAY — GLUTES + HAMSTRINGS':d===5?'FRIDAY — SHOULDERS + BACK + ARMS':null}
+function chooseDay(k){selectedDay=k;renderFitness()}function renderFitness(){const keys=Object.keys(program);dayTabs.innerHTML=keys.map(k=>`<button class="${k===selectedDay?'on':''}" onclick='chooseDay(${JSON.stringify(k)})'>${friendly(k)}</button>`).join('');dayWorkout.innerHTML=cards(program[selectedDay]);const tk=todayKey();todayWorkoutTitle.textContent=tk?friendly(tk):'Recovery / Abs / Brisk Walk';todayWorkout.innerHTML=tk?cards(program[tk]):'<div class="small">No main lifting session today. A brisk walk and/or short ab session fits here.</div><br>'+cards(program['ABS — 3X/WEEK']);const all=[...new Set(Object.values(program).flat().map(x=>x[0]))];exSelect.innerHTML=all.map(x=>`<option>${x}</option>`).join('');trainingLog.innerHTML=db.workouts.length?db.workouts.slice(-20).reverse().map(x=>`<div class="exercise"><b>${x.exercise}</b><br><span class="small">${x.date} • ${x.type==='cardio'?(x.minutes+' min'+(x.distance?' • '+x.distance+' mi':'')):(x.weight+' lb • '+x.reps+' reps × '+x.sets+' • RIR '+x.rir)}</span></div>`).join(''):'<span class="small">No training logged yet.</span>'}
+function logLift(){if(!exSelect.value)return;db.workouts.push({date:today(),exercise:exSelect.value,weight:+exWeight.value||0,reps:+exReps.value||0,sets:+exSets.value||1,rir:+exRir.value||0,type:'lift'});save();render()}function logWalk(){const m=+walkMinutes.value||0;if(!m)return;db.workouts.push({date:today(),exercise:'Brisk walk',type:'cardio',minutes:m,distance:+walkDistance.value||0,effort:+walkEffort.value||5});save();walkDistance.value='';render()}
+function saveProgress(){const item={date:pDate.value||today(),weight:+pWeight.value||null,waist:+pWaist.value||null,hips:+pHips.value||null,chest:+pChest.value||null,arm:+pArm.value||null,thigh:+pThigh.value||null};const i=db.progress.findIndex(x=>x.date===item.date);if(i>=0)db.progress[i]=item;else db.progress.push(item);db.progress.sort((a,b)=>a.date.localeCompare(b.date));save();[pWeight,pWaist,pHips,pChest,pArm,pThigh].forEach(x=>x.value='');render()}
+function editProgress(i){const x=db.progress[i];pDate.value=x.date;pWeight.value=x.weight||'';pWaist.value=x.waist||'';pHips.value=x.hips||'';pChest.value=x.chest||'';pArm.value=x.arm||'';pThigh.value=x.thigh||'';switchTab('progress');scrollTo(0,0)}function deleteProgress(i){db.progress.splice(i,1);save();render()}
+function renderProgress(){progressLog.innerHTML=db.progress.length?db.progress.slice().reverse().map((x,r)=>{const i=db.progress.length-1-r;return `<div class="exercise"><b>${x.date}</b> — ${x.weight||'—'} lb${x.waist?' • waist '+x.waist+' in':''}<br><span class="small">Hips ${x.hips||'—'} • Chest ${x.chest||'—'} • Arm ${x.arm||'—'} • Thigh ${x.thigh||'—'}</span><br><button class="secondary" onclick="editProgress(${i})">Edit</button> <button class="danger" onclick="deleteProgress(${i})">Delete</button></div>`}).join(''):'<span class="small">No check-ins yet.</span>'}
+function saveTargets(){db.cal=+setCal.value||1750;db.pro=+setPro.value||140;db.goal=+setGoal.value||125;save();render()}function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='kengs-plan-backup.json';a.click()}
+pDate.value=today();render();
 </script>
 </body>
 </html>
